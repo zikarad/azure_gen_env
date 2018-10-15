@@ -94,7 +94,7 @@ resource "azurerm_virtual_machine" "vm-dev-jh" {
     disable_password_authentication = true
 		ssh_keys = [{
 			path			= "/home/${var.azure_admin_username}/.ssh/authorized_keys"
-			key_data	= "${file("~/.ssh/azure-test1.pub")}"
+			key_data	= "${file("${var.sshkey_path}")}"
 		}]
   }
 
