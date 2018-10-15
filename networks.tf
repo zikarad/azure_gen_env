@@ -1,21 +1,23 @@
 resource "azurerm_resource_group" "RG1" {
-  name     = "rg-poc1"
+  name     = "rg-${var.prefix}"
   location = "${var.location}"
 
   tags {
-    name = "poc1"
-	stage = "test"
+    name = "${var.prefix}"
+	  stage = "test"
   }
 }
 
 /* VNET - VLANs */
 
 resource "azurerm_virtual_network" "vnet-rg1" {
-  name			= "${var.prefix}-vnet"
+  name			= "vnet-${var.prefix}"
   address_space	= ["10.0.0.0/16"]
   location		= "${var.location}"
   resource_group_name	= "${azurerm_resource_group.RG1.name}"
 }
+
+/* subnets */
 
 resource "azurerm_subnet" "sn-dev-pub" {
   name					= "dev-public"
@@ -75,7 +77,7 @@ resource "azurerm_network_security_group" "devpriv" {
 		destination_address_prefix = "*"
 	}
 
-	security_rule	{	
+	security_rule	{
 		name                       = "allow-db"
 		priority                   = 1224
 		direction                  = "Inbound"
@@ -141,23 +143,23 @@ resource "azurerm_network_security_group" "prodpriv" {
  		direction                  = "Inbound"
  		access                     = "Allow"
  		protocol                   = "Tcp"
- 		source_port_range          = "*" 
+ 		source_port_range          = "*"
  		destination_port_range     = "22"
  		source_address_prefix      = "${azurerm_subnet.sn-prod-pub.address_prefix}"
- 		destination_address_prefix = "*" 
-  }   
+ 		destination_address_prefix = "*"
+  }
 
-  security_rule   {   
+  security_rule   {
  		name                       = "allow-db"
 		priority                   = 1224
 		direction                  = "Inbound"
 		access                     = "Allow"
 		protocol                   = "Tcp"
-		source_port_range          = "*" 
+		source_port_range          = "*"
 		destination_port_range     = "${var.db_port}"
 		source_address_prefix      = "${azurerm_subnet.sn-prod-pub.address_prefix}"
-		destination_address_prefix = "*" 
-	} 
+		destination_address_prefix = "*"
+	}
 }
 
 resource "azurerm_network_security_group" "prodpub" {
