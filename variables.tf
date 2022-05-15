@@ -1,5 +1,13 @@
-variable "prefix" {
-  default = "proj1"
+variable "project" {
+  default = "example1"
+}
+
+variable "stage" {
+  default = "test"
+}
+
+variable "stage_sh" {
+  default = "t"
 }
 
 variable db_port {
@@ -23,23 +31,27 @@ variable "aws_secret_key" {}
 
 /* Azure */
 variable azure_subscription_id {
-	type = "string"
+	type = string
 }
 
 variable azure_client_id {
-	type = "string"
+	type = string
 }
 
 variable azure_client_secret {
-	type = "string"
+	type = string
 }
 
 variable azure_tenant_id {
-	type = "string"
+	type = string
 }
 
 variable location {
 	default = "West Europe"
+}
+
+variable location_sh {
+  default = "we"
 }
 
 variable os_publisher {
@@ -55,25 +67,32 @@ variable os_sku {
 }
 
 variable "azure_admin_username" {
-	default = "azure_user"
+	default = "azuser"
 }
 
 variable "jh-size" {
-	default = "Standard_B1ms"
+	default = "Standard_D1_v2"
 }
 
 variable "jh-count" {
-	default = 2
+	default = 1
 }
 
 variable "web-size" {
-	default = "Standard_B2ms"
+	default = "Standard_D1_v2"
 }
 
 variable "web-count" {
-	default = 2
+	default = 0
+}
+
+variable "sa-enable-bool" {
+  default = false
 }
 
 variable "sshkey_name" {
 	default = "azure-test1"
 }
+
+variable vm_password {}
+variable my_ip {}
