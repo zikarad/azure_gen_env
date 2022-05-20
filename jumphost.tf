@@ -20,7 +20,7 @@ resource "azurerm_resource_group" "rg-proj1" {
 
 resource "azurerm_public_ip" "pip-jh" {
   count    = var.jh-count
-  name		 = "pip-jh${count.index+1}"
+  name     = "pip-jh${count.index+1}"
   location = azurerm_resource_group.rg-proj1.location
   resource_group_name = azurerm_resource_group.rg-proj1.name
 #  public_ip_address_allocation = "Dynamic"
@@ -39,7 +39,7 @@ resource "azurerm_network_interface" "nic-jh" {
   ip_configuration {
     name                 = "testconfiguration${count.index+1}"
     subnet_id            = azurerm_subnet.sn-pub.id
-	  public_ip_address_id = element(azurerm_public_ip.pip-jh.*.id, count.index)
+    public_ip_address_id = element(azurerm_public_ip.pip-jh.*.id, count.index)
     private_ip_address_allocation = "Dynamic"
   }
 
@@ -79,8 +79,8 @@ resource "azurerm_virtual_machine" "vm-jh" {
   os_profile_linux_config {
     disable_password_authentication = true
 		ssh_keys {
-			path			= "/home/${var.azure_admin_username}/.ssh/authorized_keys"
-			key_data	= file("${var.sshkey_path}")
+    path = "/home/${var.azure_admin_username}/.ssh/authorized_keys"
+    key_data = file("${var.sshkey_path}")
 		}
   }
 
