@@ -71,7 +71,7 @@ variable "azure_admin_username" {
 }
 
 variable "jh-size" {
-	default = "Standard_D1_v2"
+	default = "Standard_B2s"
 }
 
 variable "jh-count" {
@@ -79,7 +79,7 @@ variable "jh-count" {
 }
 
 variable "web-size" {
-	default = "Standard_D1_v2"
+	default = "Standard_B2s"
 }
 
 variable "web-count" {
