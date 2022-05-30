@@ -1,5 +1,5 @@
 locals {
-  project  = "proj1"
+  project  = "exaproject"
   location = var.location
 
   tags = {
@@ -10,9 +10,17 @@ locals {
   }
 }
 
-resource "azurerm_resource_group" "rg-proj1" {
+resource "azurerm_resource_group" "proj-rg" {
   name     = join("-", [var.stage_sh, var.location_sh, local.project])
   location = local.location
+}
+
+
+/* AVAILABILITY SET */
+resource "azurerm_availability_set" "jh-ays" {
+  name                = join("-", [var.stage_sh, var.location_sh, local.project, "jh"])
+  location            = local.location
+  resource_group_name = azurerm_resource_group.proj-rg.name
 }
 
 
@@ -21,8 +29,8 @@ resource "azurerm_resource_group" "rg-proj1" {
 resource "azurerm_public_ip" "pip-jh" {
   count               = var.jh-count
   name                = "pip-jh${count.index + 1}"
-  location            = azurerm_resource_group.rg-proj1.location
-  resource_group_name = azurerm_resource_group.rg-proj1.name
+  location            = azurerm_resource_group.proj-rg.location
+  resource_group_name = azurerm_resource_group.proj-rg.name
   #  public_ip_address_allocation = "Dynamic"
   idle_timeout_in_minutes = 30
   allocation_method       = "Static"
@@ -32,9 +40,9 @@ resource "azurerm_public_ip" "pip-jh" {
 
 resource "azurerm_network_interface" "nic-jh" {
   count               = var.jh-count
-  name                = "${var.project}-nic-jh${count.index + 1}"
+  name                = "${local.project}-nic-jh${count.index + 1}"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg-proj1.name
+  resource_group_name = azurerm_resource_group.proj-rg.name
 
   ip_configuration {
     name                          = "testconfiguration${count.index + 1}"
@@ -51,11 +59,12 @@ resource "azurerm_network_interface" "nic-jh" {
 
 resource "azurerm_virtual_machine" "vm-jh" {
   count                 = var.jh-count
-  name                  = "${var.project}-jh${count.index + 1}"
-  location              = azurerm_resource_group.rg-proj1.location
-  resource_group_name   = azurerm_resource_group.rg-proj1.name
+  name                  = "${local.project}-jh${count.index + 1}"
+  location              = azurerm_resource_group.proj-rg.location
+  resource_group_name   = azurerm_resource_group.proj-rg.name
   network_interface_ids = [element(azurerm_network_interface.nic-jh.*.id, count.index)]
   vm_size               = var.jh-size
+  availability_set_id   = azurerm_availability_set.jh-ays.id
 
   storage_image_reference {
     publisher = var.os_publisher
@@ -65,14 +74,14 @@ resource "azurerm_virtual_machine" "vm-jh" {
   }
 
   storage_os_disk {
-    name              = "osdisk-${var.project}-jh${count.index + 1}"
+    name              = "osdisk-${local.project}-jh${count.index + 1}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
 
   os_profile {
-    computer_name  = "${var.project}-jh${count.index + 1}"
+    computer_name  = "${local.project}-jh${count.index + 1}"
     admin_username = var.azure_admin_username
   }
 

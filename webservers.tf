@@ -1,10 +1,16 @@
-/* VIRTUAL MACHINES */
+/* AVAILABILITY SET */
+resource "azurerm_availability_set" "web-ays" {
+  name                = join("-", [var.stage_sh, var.location_sh, local.project, "web"])
+  location            = local.location
+  resource_group_name = azurerm_resource_group.proj-rg.name
+}
 
+/* VIRTUAL MACHINES */
 resource "azurerm_public_ip" "pip-web" {
   count               = var.web-count
   name                = "pip-web${count.index + 1}"
-  location            = azurerm_resource_group.rg-proj1.location
-  resource_group_name = azurerm_resource_group.rg-proj1.name
+  location            = azurerm_resource_group.proj-rg.location
+  resource_group_name = azurerm_resource_group.proj-rg.name
   #  public_ip_address_allocation = "Dynamic"
   idle_timeout_in_minutes = 30
   allocation_method       = "Static"
@@ -16,7 +22,7 @@ resource "azurerm_network_interface" "nic-web" {
   count               = var.web-count
   name                = "${var.project}-nic-web${count.index + 1}"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg-proj1.name
+  resource_group_name = azurerm_resource_group.proj-rg.name
 
   ip_configuration {
     name                          = "testconfiguration${count.index + 1}"
@@ -31,10 +37,11 @@ resource "azurerm_network_interface" "nic-web" {
 resource "azurerm_virtual_machine" "vm-web" {
   count                 = var.web-count
   name                  = "${var.project}-web${count.index + 1}"
-  location              = azurerm_resource_group.rg-proj1.location
-  resource_group_name   = azurerm_resource_group.rg-proj1.name
+  location              = azurerm_resource_group.proj-rg.location
+  resource_group_name   = azurerm_resource_group.proj-rg.name
   network_interface_ids = ["${element(azurerm_network_interface.nic-web.*.id, count.index)}"]
   vm_size               = var.web-size
+  availability_set_id   = azurerm_availability_set.web-ays.id
 
   storage_image_reference {
     publisher = var.os_publisher
@@ -66,10 +73,10 @@ resource "azurerm_virtual_machine" "vm-web" {
 
 /* STORAGE ACCOUNT */
 
-resource "azurerm_storage_account" "sa-proj1" {
+resource "azurerm_storage_account" "proj-sa" {
   count                    = var.sa-enable-bool ? 1 : 0
   name                     = "sarztest"
-  resource_group_name      = azurerm_resource_group.rg-proj1.name
+  resource_group_name      = azurerm_resource_group.proj-rg.name
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
