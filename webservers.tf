@@ -20,7 +20,7 @@ resource "azurerm_public_ip" "pip-web" {
 
 resource "azurerm_network_interface" "nic-web" {
   count               = var.web-count
-  name                = "${var.project}-nic-web${count.index + 1}"
+  name                = "${local.project}-nic-web${count.index + 1}"
   location            = var.location
   resource_group_name = azurerm_resource_group.proj-rg.name
 
@@ -36,7 +36,7 @@ resource "azurerm_network_interface" "nic-web" {
 
 resource "azurerm_virtual_machine" "vm-web" {
   count                 = var.web-count
-  name                  = "${var.project}-web${count.index + 1}"
+  name                  = "${local.project}-web${count.index + 1}"
   location              = azurerm_resource_group.proj-rg.location
   resource_group_name   = azurerm_resource_group.proj-rg.name
   network_interface_ids = ["${element(azurerm_network_interface.nic-web.*.id, count.index)}"]
@@ -51,14 +51,14 @@ resource "azurerm_virtual_machine" "vm-web" {
   }
 
   storage_os_disk {
-    name              = "osdisk-${var.project}-web${count.index + 1}"
+    name              = "osdisk-${local.project}-web${count.index + 1}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
 
   os_profile {
-    computer_name  = "${var.project}-web${count.index + 1}"
+    computer_name  = "${local.project}-web${count.index + 1}"
     admin_username = var.azure_admin_username
   }
 
