@@ -43,6 +43,7 @@ resource "azurerm_virtual_machine" "vm-web" {
   network_interface_ids = ["${element(azurerm_network_interface.nic-web.*.id, count.index)}"]
   vm_size               = var.web-size
   availability_set_id   = azurerm_availability_set.web-ays.id
+  delete_os_disk_on_termination = true
 
   storage_image_reference {
     publisher = var.os_publisher

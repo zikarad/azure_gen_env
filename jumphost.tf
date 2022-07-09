@@ -66,6 +66,7 @@ resource "azurerm_virtual_machine" "vm-jh" {
   network_interface_ids = [element(azurerm_network_interface.nic-jh.*.id, count.index)]
   vm_size               = var.jh-size
   availability_set_id   = azurerm_availability_set.jh-ays.id
+  delete_os_disk_on_termination = true
 
   storage_image_reference {
     publisher = var.os_publisher
