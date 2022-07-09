@@ -23,6 +23,7 @@ resource "azurerm_network_interface" "nic-web" {
   name                = "${local.project}-nic-web${count.index + 1}"
   location            = var.location
   resource_group_name = azurerm_resource_group.proj-rg.name
+  enable_accelerated_networking = var.web-accnic
 
   ip_configuration {
     name                          = "testconfiguration${count.index + 1}"

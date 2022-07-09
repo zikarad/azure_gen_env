@@ -11,7 +11,7 @@ variable "stage_sh" {
 }
 
 variable "db_port" {
-  default = "3306"
+  default = "5432"
 }
 
 /* AWS */
@@ -78,12 +78,20 @@ variable "jh-count" {
   default = 1
 }
 
+variable "jh-accnic" {
+  default = false
+}
+
 variable "web-size" {
   default = "Standard_B2s"
 }
 
 variable "web-count" {
   default = 0
+}
+
+variable "web-accnic" {
+  default = false
 }
 
 variable "sa-enable-bool" {

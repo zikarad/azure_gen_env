@@ -37,7 +37,7 @@ resource "azurerm_subnet" "sn-priv" {
 /* NETWORK SECURITY GROUPS */
 
 resource "azurerm_network_security_group" "nsg-jh" {
-  name                = join("-", [var.stage, "priv"])
+  name                = join("-", [var.stage, "jh"])
   location            = var.location
   resource_group_name = azurerm_resource_group.rg-net.name
 
@@ -55,7 +55,7 @@ resource "azurerm_network_security_group" "nsg-jh" {
 }
 
 resource "azurerm_network_security_group" "nsg-priv" {
-  name                = join("-", [var.stage, "priv"])
+  name                = join("-", [var.stage, "dbms"])
   location            = var.location
   resource_group_name = azurerm_resource_group.rg-net.name
 
@@ -73,7 +73,7 @@ resource "azurerm_network_security_group" "nsg-priv" {
 }
 
 resource "azurerm_network_security_group" "nsg-pub" {
-  name                = join("-", [var.stage, "pub"])
+  name                = join("-", [var.stage, "web"])
   location            = var.location
   resource_group_name = azurerm_resource_group.rg-net.name
 

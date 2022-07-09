@@ -4,3 +4,4 @@
 - small "B" VMs accessible from specific IP
     - jumphosts /availability set/
     - optionaly webserver(s) /availability set/ [WIP]
+    - variable for acc. NIC (default false) - requires min D2 size VM(s)
