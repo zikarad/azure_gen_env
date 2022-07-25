@@ -58,16 +58,15 @@ variable "location_sh" {
   default = "we"
 }
 
-variable "os_publisher" {
-  default = "Canonical"
-}
+variable "os_map" {
+  description = "Map describing used OS image"
+  type = map
 
-variable "os_offer" {
-  default = "UbuntuServer"
-}
-
-variable "os_sku" {
-  default = "18.04-LTS"
+  default = {
+    publisher = "Canonical"
+    offer = "0001-com-ubuntu-server-focal-daily"
+    sku = "20_04-daily-lts"
+  }
 }
 
 variable "azure_admin_username" {
