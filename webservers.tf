@@ -46,9 +46,9 @@ resource "azurerm_virtual_machine" "vm-web" {
   delete_os_disk_on_termination = true
 
   storage_image_reference {
-    publisher = var.os_publisher
-    offer     = var.os_offer
-    sku       = var.os_sku
+    publisher = var.os_map.publisher
+    offer     = var.os_map.offer
+    sku       = var.os_map.sku
     version   = "latest"
   }
 
