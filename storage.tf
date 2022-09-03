@@ -17,7 +17,7 @@ data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "t-kv" {
 
-  name                        = "${var.stage_sh}-kv-${var.project}"
+  name                        = "${var.stage_sh}-kv-${local.project}"
   location                    = azurerm_resource_group.proj-rg.location
   resource_group_name         = azurerm_resource_group.proj-rg.name
   enabled_for_disk_encryption = true
@@ -43,4 +43,11 @@ resource "azurerm_key_vault" "t-kv" {
       "Get",
     ]
   }
+
+  network_acls {
+    bypass         = "AzureServices"
+    default_action = "Deny"
+  }
+
+  tags = local.tags
 }
