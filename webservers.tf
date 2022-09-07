@@ -72,16 +72,3 @@ resource "azurerm_virtual_machine" "vm-web" {
     }
   }
 }
-
-/* STORAGE ACCOUNT */
-
-resource "azurerm_storage_account" "proj-sa" {
-  count                    = var.sa-enable-bool ? 1 : 0
-  name                     = "sarztest"
-  resource_group_name      = azurerm_resource_group.proj-rg.name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = "GRS"
-
-  tags = local.tags
-}
