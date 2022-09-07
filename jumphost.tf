@@ -98,6 +98,28 @@ resource "azurerm_virtual_machine" "vm-jh" {
   tags = local.tags
 }
 
+resource "azurerm_virtual_machine_extension" "diag" {
+  count              = var.jh-count
+  name               = "${local.project}-jh${count.index + 1}-diag"
+  virtual_machine_id = azurerm_virtual_machine.vm-jh[count.index].id
+  publisher          = "Microsoft.OSTCExtensions"
+  type               = "LinuxDiagnostic"
+  type_handler_version = "2.3"
+  auto_upgrade_minor_version = true
+  tags = local.tags
+}
+
+resource "azurerm_virtual_machine_extension" "ade" {
+  count              = var.jh-count
+  name               = "${local.project}-jh${count.index + 1}-ade"
+  virtual_machine_id = azurerm_virtual_machine.vm-jh[count.index].id
+  publisher          = "Microsoft.OSTCExtensions"
+  type               = "AzureDiskEncryptionForLinux"
+  type_handler_version = "0.1"
+  auto_upgrade_minor_version = true
+  tags = local.tags
+}
+
 
 /* ASSOCIATE NICs with NSG */
 
