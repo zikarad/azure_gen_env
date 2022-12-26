@@ -98,6 +98,9 @@ resource "azurerm_virtual_machine" "vm-jh" {
   tags = local.tags
 }
 
+# Extensions requre python => remote exec?
+# TODO
+
 resource "azurerm_virtual_machine_extension" "diag" {
   count              = var.jh-count
   name               = "${local.project}-jh${count.index + 1}-diag"

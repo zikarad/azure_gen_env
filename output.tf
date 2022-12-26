@@ -1,12 +1,18 @@
 output "project" {
   value = {
-    name = local.project
+    name     = local.project
+    priv_net = azurerm_subnet.sn-priv.address_prefixes
+    publ_net = azurerm_subnet.sn-pub.address_prefixes
   }
 }
 
-output "hosts-jh" {
+output "hosts-jh-public" {
   value = zipmap(azurerm_virtual_machine.vm-jh.*.name,
   azurerm_public_ip.pip-jh.*.ip_address)
+}
+output "hosts-jh-private" {
+  value = zipmap(azurerm_virtual_machine.vm-jh.*.name,
+  azurerm_network_interface.nic-jh.*.private_ip_address)
 }
 
 output "hosts-web" {
