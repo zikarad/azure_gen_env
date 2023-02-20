@@ -33,14 +33,17 @@ resource "azurerm_key_vault" "t-kv" {
 
     key_permissions = [
       "Get",
+      "List"
     ]
 
     secret_permissions = [
       "Get",
+      "List"
     ]
 
     storage_permissions = [
       "Get",
+      "List"
     ]
   }
 

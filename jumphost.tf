@@ -1,5 +1,5 @@
 locals {
-  project  = "exaproject"
+  project  = var.project
   location = var.location
 
   tags = {
