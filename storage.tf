@@ -28,7 +28,7 @@ resource "azurerm_key_vault" "t-kv" {
   sku_name = "standard"
 
   access_policy {
-   tenant_id = data.azurerm_client_config.current.tenant_id
+    tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = data.azurerm_client_config.current.object_id
 
     key_permissions = [
@@ -50,6 +50,8 @@ resource "azurerm_key_vault" "t-kv" {
   network_acls {
     bypass         = "AzureServices"
     default_action = "Deny"
+    ip_rules = [var.my_ip]
+    virtual_network_subnet_ids = [azurerm_subnet.sn-pub.id, azurerm_subnet.sn-priv.id] 
   }
 
   tags = local.tags
