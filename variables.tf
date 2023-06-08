@@ -14,12 +14,7 @@ variable "db_port" {
   default = "5432"
 }
 
-variable "region" {
-  default = "eu-central-1"
-}
-
 variable "sshkey_path" {}
-
 
 /* Azure */
 variable "azure_subscription_id" {
