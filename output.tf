@@ -35,3 +35,15 @@ output "key-vault" {
     uri  = azurerm_key_vault.t-kv.vault_uri
   }
 }
+
+output "application" {
+  value = {
+    name = azuread_application.aad-app1.display_name
+    client_id = azuread_application.aad-app1.application_id
+  }
+}
+
+output "application-password" {
+  value = azuread_application_password.aad-app1.value
+  sensitive = true
+}

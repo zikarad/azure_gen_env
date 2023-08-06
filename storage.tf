@@ -2,7 +2,7 @@
 
 resource "azurerm_storage_account" "proj-sa" {
   count                    = var.sa-enable-bool ? 1 : 0
-  name                     = "sarztest"
+  name                     = join("-", ["sa", var.project])
   resource_group_name      = azurerm_resource_group.proj-rg.name
   location                 = var.location
   account_tier             = "Standard"
@@ -16,8 +16,7 @@ resource "azurerm_storage_account" "proj-sa" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "t-kv" {
-
-  name                        = "${var.stage_sh}-kv-${local.project}"
+  name                        = join("-", [var.stage_sh, "kv", local.project])
   location                    = azurerm_resource_group.proj-rg.location
   resource_group_name         = azurerm_resource_group.proj-rg.name
   enabled_for_disk_encryption = true
@@ -26,26 +25,6 @@ resource "azurerm_key_vault" "t-kv" {
   purge_protection_enabled    = false
 
   sku_name = "standard"
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = [
-      "Get",
-      "List"
-    ]
-
-    secret_permissions = [
-      "Get",
-      "List"
-    ]
-
-    storage_permissions = [
-      "Get",
-      "List"
-    ]
-  }
 
   network_acls {
     bypass         = "AzureServices"
@@ -56,3 +35,21 @@ resource "azurerm_key_vault" "t-kv" {
 
   tags = local.tags
 }
+
+resource "azurerm_key_vault_access_policy" "owner" {
+  key_vault_id = azurerm_key_vault.t-kv.id
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = data.azurerm_client_config.current.object_id
+
+  key_permissions = [ "Get", "List" ]
+  secret_permissions = [ "Get", "List" ]
+  certificate_permissions = [ "Get", "List" ]
+  }
+
+resource "azurerm_key_vault_access_policy" "sp" {
+  key_vault_id = azurerm_key_vault.t-kv.id
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = azuread_application.aad-app1.object_id
+
+  secret_permissions = [ "Get" ]
+  }
