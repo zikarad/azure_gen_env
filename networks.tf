@@ -18,20 +18,12 @@ resource "azurerm_virtual_network" "vnet" {
 
 /* SUBNETS */
 
-resource "azurerm_subnet" "sn-pub" {
-  name                 = join("-", [var.stage, "public"])
+resource "azurerm_subnet" "subnets" {
+  for_each = var.subnets_map
+  name                 = join("-", [var.stage, each.value.name])
   resource_group_name  = azurerm_resource_group.rg-net.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
-  service_endpoints    = ["Microsoft.KeyVault"]
-}
-
-
-resource "azurerm_subnet" "sn-priv" {
-  name                 = join("-", [var.stage, "private"])
-  resource_group_name  = azurerm_resource_group.rg-net.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = each.value.cidr_block
   service_endpoints    = ["Microsoft.KeyVault"]
 }
 

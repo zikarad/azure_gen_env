@@ -2,8 +2,8 @@ output "project" {
   value = {
     name     = local.project
     location = local.location
-    priv_net = azurerm_subnet.sn-priv.address_prefixes
-    publ_net = azurerm_subnet.sn-pub.address_prefixes
+    priv_net = azurerm_subnet.subnets["sn-priv"].address_prefixes
+    publ_net = azurerm_subnet.subnets["sn-pub"].address_prefixes
   }
 }
 

@@ -45,6 +45,24 @@ variable "location_sh" {
   default = "we"
 }
 
+variable "subnets_map" {
+  type = map(object({
+    name = string
+    cidr_block = list(string)
+  }))
+
+  default = {
+    sn-pub = {
+      name = "public"
+      cidr_block = ["10.0.1.0/24"]
+    }
+    sn-priv = {
+      name = "private"
+      cidr_block = ["10.0.2.0/24"]
+    }
+  }
+}
+
 variable "os_map" {
   description = "Map describing used OS image"
   type = map

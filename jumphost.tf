@@ -47,7 +47,7 @@ resource "azurerm_network_interface" "nic-jh" {
 
   ip_configuration {
     name                          = "testconfiguration${count.index + 1}"
-    subnet_id                     = azurerm_subnet.sn-pub.id
+    subnet_id                     = azurerm_subnet.subnets["sn-pub"].id
     public_ip_address_id          = element(azurerm_public_ip.pip-jh.*.id, count.index)
     private_ip_address_allocation = "Dynamic"
   }

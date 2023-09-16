@@ -30,7 +30,7 @@ resource "azurerm_key_vault" "t-kv" {
     bypass         = "AzureServices"
     default_action = "Deny"
     ip_rules = [var.my_ip]
-    virtual_network_subnet_ids = [azurerm_subnet.sn-pub.id, azurerm_subnet.sn-priv.id] 
+    virtual_network_subnet_ids = [azurerm_subnet.subnets["sn-pub"].id, azurerm_subnet.subnets["sn-priv"].id] 
   }
 
   tags = local.tags
