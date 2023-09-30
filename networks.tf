@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "rg-net" {
-  name     = join("-", [var.stage_sh, var.location_sh, "net"])
-  location = var.location
+  name     = join("-", [var.stage_sh, var.location.short, "net"])
+  location = var.location.long
 
   tags = local.tags
 }
@@ -11,7 +11,7 @@ resource "azurerm_resource_group" "rg-net" {
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-${var.stage}"
   address_space       = ["10.0.0.0/16"]
-  location            = var.location
+  location            = var.location.long
   resource_group_name = azurerm_resource_group.rg-net.name
 }
 
@@ -32,7 +32,7 @@ resource "azurerm_subnet" "subnets" {
 
 resource "azurerm_network_security_group" "nsg-jh" {
   name                = join("-", [var.stage, "jh"])
-  location            = var.location
+  location            = var.location.long
   resource_group_name = azurerm_resource_group.rg-net.name
 
   security_rule {
@@ -50,7 +50,7 @@ resource "azurerm_network_security_group" "nsg-jh" {
 
 resource "azurerm_network_security_group" "nsg-priv" {
   name                = join("-", [var.stage, "dbms"])
-  location            = var.location
+  location            = var.location.long
   resource_group_name = azurerm_resource_group.rg-net.name
 
   security_rule {
@@ -68,7 +68,7 @@ resource "azurerm_network_security_group" "nsg-priv" {
 
 resource "azurerm_network_security_group" "nsg-pub" {
   name                = join("-", [var.stage, "web"])
-  location            = var.location
+  location            = var.location.long
   resource_group_name = azurerm_resource_group.rg-net.name
 
   security_rule {

@@ -38,11 +38,12 @@ variable "azure_tenant_id" {
 }
 
 variable "location" {
-  default = "West Europe"
-}
+  type = map
 
-variable "location_sh" {
-  default = "we"
+  default = {
+    long = "West Europe"
+    short = "we"
+  }
 }
 
 variable "subnets_map" {

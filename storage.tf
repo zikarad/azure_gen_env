@@ -4,7 +4,7 @@ resource "azurerm_storage_account" "proj-sa" {
   count                    = var.sa-enable-bool ? 1 : 0
   name                     = join("-", ["sa", var.project])
   resource_group_name      = azurerm_resource_group.proj-rg.name
-  location                 = var.location
+  location                 = var.location.long
   account_tier             = "Standard"
   account_replication_type = "GRS"
 

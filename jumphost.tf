@@ -1,6 +1,5 @@
 locals {
   project  = var.project
-  location = var.location
 
   tags = {
     stage     = var.stage
@@ -11,15 +10,15 @@ locals {
 }
 
 resource "azurerm_resource_group" "proj-rg" {
-  name     = join("-", [var.stage_sh, var.location_sh, local.project])
-  location = local.location
+  name     = join("-", [var.stage_sh, var.location.short, local.project])
+  location = var.location.long
 }
 
 
 /* AVAILABILITY SET */
 resource "azurerm_availability_set" "jh-ays" {
-  name                = join("-", [var.stage_sh, var.location_sh, local.project, "jh"])
-  location            = local.location
+  name                = join("-", [var.stage_sh, var.location.short, local.project, "jh"])
+  location            = var.location.long
   resource_group_name = azurerm_resource_group.proj-rg.name
 }
 
@@ -41,7 +40,7 @@ resource "azurerm_public_ip" "pip-jh" {
 resource "azurerm_network_interface" "nic-jh" {
   count               = var.jh-count
   name                = "${local.project}-nic-jh${count.index + 1}"
-  location            = var.location
+  location            = var.location.long
   resource_group_name = azurerm_resource_group.proj-rg.name
   enable_accelerated_networking = var.jh-accnic
 
