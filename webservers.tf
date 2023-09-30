@@ -1,7 +1,7 @@
 /* AVAILABILITY SET */
 resource "azurerm_availability_set" "web-ays" {
-  name                = join("-", [var.stage_sh, var.location_sh, local.project, "web"])
-  location            = local.location
+  name                = join("-", [var.stage_sh, var.location.short, local.project, "web"])
+  location            = var.location.long
   resource_group_name = azurerm_resource_group.proj-rg.name
 }
 
@@ -21,13 +21,13 @@ resource "azurerm_public_ip" "pip-web" {
 resource "azurerm_network_interface" "nic-web" {
   count               = var.web-count
   name                = "${local.project}-nic-web${count.index + 1}"
-  location            = var.location
+  location            = var.location.long
   resource_group_name = azurerm_resource_group.proj-rg.name
   enable_accelerated_networking = var.web-accnic
 
   ip_configuration {
     name                          = "testconfiguration${count.index + 1}"
-    subnet_id                     = azurerm_subnet.sn-pub.id
+    subnet_id                     = azurerm_subnet.subnets["sn-pub"].id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = element(azurerm_public_ip.pip-web.*.id, count.index)
   }

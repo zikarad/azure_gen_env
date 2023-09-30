@@ -4,7 +4,7 @@ resource "azurerm_storage_account" "proj-sa" {
   count                    = var.sa-enable-bool ? 1 : 0
   name                     = join("-", ["sa", var.project])
   resource_group_name      = azurerm_resource_group.proj-rg.name
-  location                 = var.location
+  location                 = var.location.long
   account_tier             = "Standard"
   account_replication_type = "GRS"
 
@@ -30,7 +30,7 @@ resource "azurerm_key_vault" "t-kv" {
     bypass         = "AzureServices"
     default_action = "Deny"
     ip_rules = [var.my_ip]
-    virtual_network_subnet_ids = [azurerm_subnet.sn-pub.id, azurerm_subnet.sn-priv.id] 
+    virtual_network_subnet_ids = [azurerm_subnet.subnets["sn-pub"].id, azurerm_subnet.subnets["sn-priv"].id] 
   }
 
   tags = local.tags

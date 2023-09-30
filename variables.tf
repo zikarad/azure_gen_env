@@ -38,11 +38,30 @@ variable "azure_tenant_id" {
 }
 
 variable "location" {
-  default = "West Europe"
+  type = map
+
+  default = {
+    long = "West Europe"
+    short = "we"
+  }
 }
 
-variable "location_sh" {
-  default = "we"
+variable "subnets_map" {
+  type = map(object({
+    name = string
+    cidr_block = list(string)
+  }))
+
+  default = {
+    sn-pub = {
+      name = "public"
+      cidr_block = ["10.0.1.0/24"]
+    }
+    sn-priv = {
+      name = "private"
+      cidr_block = ["10.0.2.0/24"]
+    }
+  }
 }
 
 variable "os_map" {
@@ -51,8 +70,10 @@ variable "os_map" {
 
   default = {
     publisher = "Canonical"
-    offer = "0001-com-ubuntu-server-focal-daily"
-    sku = "20_04-daily-lts"
+    #    offer = "0001-com-ubuntu-server-focal-daily"
+    #    sku = "20_04-daily-lts"
+    offer = "0001-com-ubuntu-server-jammy"
+    sku = "22_04-lts-gen2"
   }
 }
 
