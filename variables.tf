@@ -70,8 +70,10 @@ variable "os_map" {
 
   default = {
     publisher = "Canonical"
-    offer = "0001-com-ubuntu-server-focal-daily"
-    sku = "20_04-daily-lts"
+    #    offer = "0001-com-ubuntu-server-focal-daily"
+    #    sku = "20_04-daily-lts"
+    offer = "0001-com-ubuntu-server-jammy"
+    sku = "22_04-lts-gen2"
   }
 }
 
