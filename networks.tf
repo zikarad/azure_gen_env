@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "rg-net" {
-  name     = join("-", [var.stage_sh, var.location.short, "net"])
+  name     = join("-", [var.stage.short, var.location.short, "net"])
   location = var.location.long
 
   tags = local.tags
@@ -9,7 +9,7 @@ resource "azurerm_resource_group" "rg-net" {
 /* VNET */
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "vnet-${var.stage}"
+  name                = "vnet-${var.stage.long}"
   address_space       = ["10.0.0.0/16"]
   location            = var.location.long
   resource_group_name = azurerm_resource_group.rg-net.name
@@ -20,7 +20,7 @@ resource "azurerm_virtual_network" "vnet" {
 
 resource "azurerm_subnet" "subnets" {
   for_each = var.subnets_map
-  name                 = join("-", [var.stage, each.value.name])
+  name                 = join("-", [var.stage.long, each.value.name])
   resource_group_name  = azurerm_resource_group.rg-net.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = each.value.cidr_block
@@ -28,10 +28,20 @@ resource "azurerm_subnet" "subnets" {
 }
 
 
+/* PROXIMITY */
+
+resource "azurerm_proximity_placement_group" "webdb" {
+  name                = join("-", [var.stage.short, "pxg", "webdb"])
+  location            = azurerm_resource_group.rg-net.location
+  resource_group_name = azurerm_resource_group.proj-rg.name
+
+  tags = local.tags
+}
+
 /* NETWORK SECURITY GROUPS */
 
 resource "azurerm_network_security_group" "nsg-jh" {
-  name                = join("-", [var.stage, "jh"])
+  name                = join("-", [var.stage.long, "jh"])
   location            = var.location.long
   resource_group_name = azurerm_resource_group.rg-net.name
 
@@ -49,7 +59,7 @@ resource "azurerm_network_security_group" "nsg-jh" {
 }
 
 resource "azurerm_network_security_group" "nsg-priv" {
-  name                = join("-", [var.stage, "dbms"])
+  name                = join("-", [var.stage.long, "dbms"])
   location            = var.location.long
   resource_group_name = azurerm_resource_group.rg-net.name
 
@@ -67,7 +77,7 @@ resource "azurerm_network_security_group" "nsg-priv" {
 }
 
 resource "azurerm_network_security_group" "nsg-pub" {
-  name                = join("-", [var.stage, "web"])
+  name                = join("-", [var.stage.long, "web"])
   location            = var.location.long
   resource_group_name = azurerm_resource_group.rg-net.name
 

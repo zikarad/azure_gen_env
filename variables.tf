@@ -3,11 +3,12 @@ variable "project" {
 }
 
 variable "stage" {
-  default = "test"
-}
+  type = map
 
-variable "stage_sh" {
-  default = "t"
+  default = {
+    long = "test"
+    short = "t"
+  }
 }
 
 variable "db_port" {
