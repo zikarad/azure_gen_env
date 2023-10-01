@@ -16,7 +16,7 @@ resource "azurerm_storage_account" "proj-sa" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "t-kv" {
-  name                        = join("-", [var.stage_sh, "kv", local.project])
+  name                        = join("-", [var.stage.short, "kv", local.project])
   location                    = azurerm_resource_group.proj-rg.location
   resource_group_name         = azurerm_resource_group.proj-rg.name
   enabled_for_disk_encryption = true

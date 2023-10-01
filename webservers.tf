@@ -1,8 +1,10 @@
 /* AVAILABILITY SET */
 resource "azurerm_availability_set" "web-ays" {
-  name                = join("-", [var.stage_sh, var.location.short, local.project, "web"])
+  name                = join("-", [var.stage.short, var.location.short, local.project, "web"])
   location            = var.location.long
   resource_group_name = azurerm_resource_group.proj-rg.name
+  proximity_placement_group_id = azurerm_proximity_placement_group.webdb.id
+  platform_fault_domain_count = 2
 }
 
 /* VIRTUAL MACHINES */
@@ -43,6 +45,7 @@ resource "azurerm_virtual_machine" "vm-web" {
   network_interface_ids = ["${element(azurerm_network_interface.nic-web.*.id, count.index)}"]
   vm_size               = var.web-size
   availability_set_id   = azurerm_availability_set.web-ays.id
+  proximity_placement_group_id = azurerm_proximity_placement_group.webdb.id
   delete_os_disk_on_termination = true
 
   storage_image_reference {

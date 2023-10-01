@@ -2,7 +2,7 @@ locals {
   project  = var.project
 
   tags = {
-    stage     = var.stage
+    stage     = var.stage.long
     project   = local.project
     managedby = "terraform"
     author    = "zikar"
@@ -10,16 +10,18 @@ locals {
 }
 
 resource "azurerm_resource_group" "proj-rg" {
-  name     = join("-", [var.stage_sh, var.location.short, local.project])
+  name     = join("-", [var.stage.short, var.location.short, local.project])
   location = var.location.long
 }
 
 
 /* AVAILABILITY SET */
 resource "azurerm_availability_set" "jh-ays" {
-  name                = join("-", [var.stage_sh, var.location.short, local.project, "jh"])
+  name                = join("-", [var.stage.short, var.location.short, local.project, "jh"])
   location            = var.location.long
   resource_group_name = azurerm_resource_group.proj-rg.name
+/*  proximity_placement_group_id = azurerm_proximity_placement_group.webdb.id */
+  platform_fault_domain_count = 2
 }
 
 
