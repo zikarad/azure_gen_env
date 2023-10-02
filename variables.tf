@@ -83,7 +83,7 @@ variable "azure_admin_username" {
 }
 
 variable "jh-size" {
-  default = "Standard_B2s"
+  default = "Standard_D2as_v5"
 }
 
 variable "jh-count" {

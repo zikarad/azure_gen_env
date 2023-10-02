@@ -36,12 +36,49 @@ resource "azurerm_key_vault" "t-kv" {
   tags = local.tags
 }
 
+resource "azurerm_key_vault_key" "dad" {
+  name = "dad-key"
+  key_vault_id = azurerm_key_vault.t-kv.id
+  key_type     = "RSA"
+  key_size     = 2048
+
+  key_opts = [
+      "decrypt",
+      "encrypt",
+      "sign",
+      "unwrapKey",
+      "verify",
+      "wrapKey",
+    ]
+    rotation_policy {
+      automatic {
+        time_before_expiry = "P30D"
+      }
+
+      expire_after         = "P90D"
+      notify_before_expiry = "P29D"
+  }
+
+  depends_on = [azurerm_key_vault_access_policy.owner]
+}
+
 resource "azurerm_key_vault_access_policy" "owner" {
   key_vault_id = azurerm_key_vault.t-kv.id
   tenant_id = data.azurerm_client_config.current.tenant_id
   object_id = data.azurerm_client_config.current.object_id
 
-  key_permissions = [ "Get", "List" ]
+  key_permissions = [
+      "Get",
+      "List",
+      "Create",
+      "Delete",
+      "Get",
+      "Purge",
+      "Recover",
+      "Update",
+      "GetRotationPolicy",
+      "SetRotationPolicy"
+    ]
   secret_permissions = [ "Get", "List" ]
   certificate_permissions = [ "Get", "List" ]
   }

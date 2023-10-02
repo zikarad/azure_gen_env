@@ -99,6 +99,27 @@ resource "azurerm_virtual_machine" "vm-jh" {
   tags = local.tags
 }
 
+resource "azurerm_virtual_machine_extension" "disk-encryption" {
+  count     = var.jh-count
+  name      = "AzureDiskEncryption"
+  virtual_machine_id = element(azurerm_virtual_machine.vm-jh.*.id, count.index)
+  publisher = "Microsoft.Azure.Security"
+  type                 = "AzureDiskEncryptionForLinux"
+  type_handler_version = "1.4"
+
+  settings = <<SETTINGS
+  {
+    "EncryptionOperation": "EnableEncryption",
+    "KeyVaultURL": "https://${azurerm_key_vault.t-kv.name}.vault.azure.net",
+    "KeyVaultResourceId": "${azurerm_key_vault.t-kv.id}",
+    "KeyEncryptionKeyURL": "https://${azurerm_key_vault.t-kv.name}.vault.azure.net/keys/jh-kek${count.index}/1",
+    "KekVaultResourceId": "${azurerm_key_vault.t-kv.id}",
+    "KeyEncryptionAlgorithm": "RSA-OAEP",
+    "VolumeType": "All"
+  }
+  SETTINGS
+}
+
 
 /* ASSOCIATE NICs with NSG */
 
