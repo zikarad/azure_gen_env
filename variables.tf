@@ -106,6 +106,16 @@ variable "web-accnic" {
   default = false
 }
 
+variable "web-os-disk-caching" {
+  type = string
+  default = "ReadWrite"
+}
+
+variable "web-os-disk-type" {
+  type = string
+  default = "Standard_LRS"
+}
+
 variable "sa-enable-bool" {
   default = false
 }

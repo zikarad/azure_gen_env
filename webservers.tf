@@ -57,9 +57,9 @@ resource "azurerm_virtual_machine" "vm-web" {
 
   storage_os_disk {
     name              = "osdisk-${local.project}-web${count.index + 1}"
-    caching           = "ReadWrite"
+    caching           = var.web-os-disk-caching
     create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+    managed_disk_type = var.web-os-disk-type
   }
 
   os_profile {
