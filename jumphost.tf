@@ -39,9 +39,9 @@ resource "azurerm_public_ip" "pip-jh" {
   tags = local.tags
 }
 
-resource "azurerm_network_interface" "nic-jh" {
+resource "azurerm_network_interface" "pnic-jh" {
   count               = var.jh-count
-  name                = "${local.project}-nic-jh${count.index + 1}"
+  name                = "${local.project}-pnic-jh${count.index + 1}"
   location            = var.location.long
   resource_group_name = azurerm_resource_group.proj-rg.name
   accelerated_networking_enabled = var.jh-accnic
@@ -56,6 +56,22 @@ resource "azurerm_network_interface" "nic-jh" {
   tags = local.tags
 }
 
+resource "azurerm_network_interface" "inic-jh" {
+  count               = var.jh-count
+  name                = "${local.project}-inic-jh${count.index + 1}"
+  location            = var.location.long
+  resource_group_name = azurerm_resource_group.proj-rg.name
+  enable_accelerated_networking = var.jh-accnic
+
+  ip_configuration {
+    name                          = "testconfiguration${count.index + 1}"
+    subnet_id                     = azurerm_subnet.subnets["sn-priv"].id
+    private_ip_address_allocation = "Dynamic"
+  }
+
+  tags = local.tags
+}
+
 
 /* Jumphosts */
 
@@ -64,7 +80,7 @@ resource "azurerm_virtual_machine" "vm-jh" {
   name                  = "${local.project}-jh${count.index + 1}"
   location              = azurerm_resource_group.proj-rg.location
   resource_group_name   = azurerm_resource_group.proj-rg.name
-  network_interface_ids = [element(azurerm_network_interface.nic-jh.*.id, count.index)]
+  network_interface_ids = [element(azurerm_network_interface.inic-jh.*.id, count.index), element(azurerm_network_interface.pnic-jh.*.id, count.index)]
   vm_size               = var.jh-size
   availability_set_id   = azurerm_availability_set.jh-ays.id
   delete_os_disk_on_termination = true
@@ -102,8 +118,8 @@ resource "azurerm_virtual_machine" "vm-jh" {
 
 /* ASSOCIATE NICs with NSG */
 
-resource "azurerm_network_interface_security_group_association" "nsgassoc-jh" {
+resource "azurerm_network_interface_security_group_association" "nsgpassoc-jh" {
   count                     = var.jh-count
-  network_interface_id      = azurerm_network_interface.nic-jh[count.index].id
-  network_security_group_id = azurerm_network_security_group.nsg-jh.id
+  network_interface_id      = azurerm_network_interface.pnic-jh[count.index].id
+  network_security_group_id = azurerm_network_security_group.nsgp-jh.id
 }

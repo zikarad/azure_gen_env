@@ -21,7 +21,7 @@ output "access-jh-public" {
 
 output "hosts-jh-private" {
   value = zipmap(azurerm_virtual_machine.vm-jh.*.name,
-  azurerm_network_interface.nic-jh.*.private_ip_address)
+  azurerm_network_interface.pnic-jh.*.private_ip_address)
 }
 
 output "hosts-web" {
