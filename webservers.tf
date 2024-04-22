@@ -28,7 +28,7 @@ resource "azurerm_network_interface" "nic-web" {
   accelerated_networking_enabled  = var.web-accnic
 
   ip_configuration {
-    name                          = "testconfiguration${count.index + 1}"
+    name                          = "pubipconf${count.index + 1}"
     subnet_id                     = azurerm_subnet.subnets["sn-pub"].id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = element(azurerm_public_ip.pip-web.*.id, count.index)
@@ -42,7 +42,7 @@ resource "azurerm_virtual_machine" "vm-web" {
   name                  = "${local.project}-web${count.index + 1}"
   location              = azurerm_resource_group.proj-rg.location
   resource_group_name   = azurerm_resource_group.proj-rg.name
-  network_interface_ids = ["${element(azurerm_network_interface.nic-web.*.id, count.index)}"]
+  network_interface_ids = [element(azurerm_network_interface.nic-web.*.id, count.index)]
   vm_size               = var.web-size
   availability_set_id   = azurerm_availability_set.web-ays.id
   proximity_placement_group_id = azurerm_proximity_placement_group.webdb.id
@@ -71,7 +71,7 @@ resource "azurerm_virtual_machine" "vm-web" {
     disable_password_authentication = true
     ssh_keys {
       path     = "/home/${var.azure_admin_username}/.ssh/authorized_keys"
-      key_data = file("${var.sshkey_path}")
+      key_data = file(var.sshkey_path)
     }
   }
 }

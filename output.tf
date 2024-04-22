@@ -29,6 +29,12 @@ output "hosts-web" {
   azurerm_public_ip.pip-web.*.ip_address)
 }
 
+output "hosts-be" {
+  value = zipmap(azurerm_virtual_machine.vm-be.*.name,
+  azurerm_network_interface.inic-be.*.private_ip_address)
+}
+
+
 output "key-vault" {
   value = {
     name = azurerm_key_vault.t-kv.name
