@@ -74,7 +74,7 @@ variable "os_map" {
     #offer = "0001-com-ubuntu-server-focal-daily"
     #sku = "20_04-daily-lts"
     offer = "0001-com-ubuntu-server-jammy"
-    sku = "22_04-lts-gen2"
+    sku = "22_04-lts-arm64"
   }
 }
 
@@ -83,7 +83,7 @@ variable "azure_admin_username" {
 }
 
 variable "jh-size" {
-  default = "Standard_B2s"
+  default = "Standard_B2pls_v2"
 }
 
 variable "jh-count" {
