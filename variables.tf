@@ -67,14 +67,23 @@ variable "subnets_map" {
 
 variable "os_map" {
   description = "Map describing used OS image"
-  type = map
+  type = map(object({
+    publisher = string
+    offer = string
+    sku = string
+  }))
 
   default = {
-    publisher = "Canonical"
-    #offer = "0001-com-ubuntu-server-focal-daily"
-    #sku = "20_04-daily-lts"
-    offer = "0001-com-ubuntu-server-jammy"
-    sku = "22_04-lts-arm64"
+    arm64 = {
+      publisher = "Canonical"
+      offer = "0001-com-ubuntu-server-jammy"
+      sku = "22_04-lts-arm64"
+    }
+    x86_64 = {
+      publisher = "Canonical"
+      offer = "0001-com-ubuntu-server-jammy"
+      sku = "22_04-lts-gen2"
+    } 
   }
 }
 
@@ -95,7 +104,7 @@ variable "jh-accnic" {
 }
 
 variable "web-size" {
-  default = "Standard_B2s"
+  default = "Standard_B2as_v2"
 }
 
 variable "web-count" {

@@ -70,9 +70,9 @@ resource "azurerm_virtual_machine" "vm-jh" {
   delete_os_disk_on_termination = true
 
   storage_image_reference {
-    publisher = var.os_map.publisher
-    offer     = var.os_map.offer
-    sku       = var.os_map.sku
+    publisher = var.os_map.arm64.publisher
+    offer     = var.os_map.arm64.offer
+    sku       = var.os_map.arm64.sku
     version   = "latest"
   }
 

@@ -25,7 +25,7 @@ resource "azurerm_network_interface" "nic-web" {
   name                = "${local.project}-nic-web${count.index + 1}"
   location            = var.location.long
   resource_group_name = azurerm_resource_group.proj-rg.name
-  enable_accelerated_networking = var.web-accnic
+  accelerated_networking_enabled  = var.web-accnic
 
   ip_configuration {
     name                          = "testconfiguration${count.index + 1}"
@@ -49,9 +49,9 @@ resource "azurerm_virtual_machine" "vm-web" {
   delete_os_disk_on_termination = true
 
   storage_image_reference {
-    publisher = var.os_map.publisher
-    offer     = var.os_map.offer
-    sku       = var.os_map.sku
+    publisher = var.os_map.x86_64.publisher
+    offer     = var.os_map.x86_64.offer
+    sku       = var.os_map.x86_64.sku
     version   = "latest"
   }
 
