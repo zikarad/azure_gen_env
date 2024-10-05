@@ -44,7 +44,7 @@ resource "azurerm_network_interface" "nic-jh" {
   name                = "${local.project}-nic-jh${count.index + 1}"
   location            = var.location.long
   resource_group_name = azurerm_resource_group.proj-rg.name
-  enable_accelerated_networking = var.jh-accnic
+  accelerated_networking_enabled = var.jh-accnic
 
   ip_configuration {
     name                          = "testconfiguration${count.index + 1}"
