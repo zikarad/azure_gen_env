@@ -35,10 +35,14 @@ resource "azurerm_virtual_machine" "vm-be" {
   proximity_placement_group_id = azurerm_proximity_placement_group.webdb.id
   delete_os_disk_on_termination = true
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   storage_image_reference {
-    publisher = var.os_map.publisher
-    offer     = var.os_map.offer
-    sku       = var.os_map.sku
+    publisher = var.os_map.x86_64.publisher
+    offer     = var.os_map.x86_64.offer
+    sku       = var.os_map.x86_64.sku
     version   = "latest"
   }
 

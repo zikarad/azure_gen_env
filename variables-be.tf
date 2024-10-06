@@ -1,5 +1,5 @@
 variable "be-size" {
-  default = "Standard_B2s"
+  default = "Standard_B2als_v2"
 }
 
 variable "be-count" {
