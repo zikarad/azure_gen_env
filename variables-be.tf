@@ -10,14 +10,12 @@ variable "be-accnic" {
   default = false
 }
 
-variable "be-os-disk-caching" {
-  type = string
-  default = "ReadWrite"
-}
-
-variable "be-os-disk-type" {
-  type = string
-  default = "Standard_LRS"
+variable "be-os-disk" {
+  type = map(string)
+  default = {
+    caching = "ReadWrite"
+    type = "Standard_LRS"
+  }
 }
 
 variable "be-data-disk-count" {
@@ -30,13 +28,10 @@ variable "be-data-disk-size" {
   default = 32
 }
 
-variable "be-data-disk-type" {
-  type = string
-  default = "Standard_LRS"
+variable "be-data-disk" {
+  type = map(string)
+  default = {
+    caching = "ReadWrite"
+    type = "Standard_LRS"
+  }
 }
-
-variable "be-data-disk-caching" {
-  type = string
-  default = "ReadWrite"
-}
-

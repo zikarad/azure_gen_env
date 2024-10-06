@@ -10,14 +10,12 @@ variable "web-accnic" {
   default = false
 }
 
-variable "web-os-disk-caching" {
-  type = string
-  default = "ReadWrite"
-}
-
-variable "web-os-disk-type" {
-  type = string
-  default = "Standard_LRS"
+variable "web-os-disk" {
+  type = map(string)
+  default = {
+    caching = "ReadWrite"
+    type = "Standard_LRS"
+  }
 }
 
 variable "web-data-disk-count" {
@@ -30,12 +28,10 @@ variable "web-data-disk-size" {
   default = 32
 }
 
-variable "web-data-disk-type" {
-  type = string
-  default = "Standard_LRS"
-}
-
-variable "web-data-disk-caching" {
-  type = string
-  default = "ReadWrite"
+variable "web-data-disk" {
+  type = map(string)
+  default = {
+    caching = "ReadWrite"
+    type = "Standard_LRS"
+  }
 }

@@ -57,9 +57,9 @@ resource "azurerm_virtual_machine" "vm-web" {
 
   storage_os_disk {
     name              = "osdisk-${local.project}-web${count.index + 1}"
-    caching           = var.web-os-disk-caching
+    caching           = var.web-os-disk.caching
     create_option     = "FromImage"
-    managed_disk_type = var.web-os-disk-type
+    managed_disk_type = var.web-os-disk.type
   }
 
   os_profile {
@@ -81,7 +81,7 @@ resource "azurerm_managed_disk" "web-data" {
   name = "${local.project}-web${ceil((count.index+1) / var.web-data-disk-count)}-data${(count.index+1) - var.web-data-disk-count*floor((count.index+1)/var.web-data-disk-count)}"
   location              = azurerm_resource_group.proj-rg.location
   resource_group_name   = azurerm_resource_group.proj-rg.name
-  storage_account_type  = var.web-data-disk-type
+  storage_account_type  = var.web-data-disk.type
   disk_size_gb          = var.web-data-disk-size
   create_option         = "Empty"
 }
@@ -91,5 +91,5 @@ resource "azurerm_virtual_machine_data_disk_attachment" "web-data-datt" {
   managed_disk_id       = azurerm_managed_disk.web-data[count.index].id
   virtual_machine_id    = azurerm_virtual_machine.vm-web[ceil((count.index+1)/var.web-data-disk-count)-1].id
   lun                   = (count.index+1) - var.web-data-disk-count*floor((count.index+1)/var.web-data-disk-count)
-  caching               = var.web-data-disk-caching
+  caching               = var.web-data-disk.caching
 }
