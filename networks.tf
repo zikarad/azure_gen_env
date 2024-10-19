@@ -40,7 +40,7 @@ resource "azurerm_proximity_placement_group" "webdb" {
 
 /* NETWORK SECURITY GROUPS */
 
-resource "azurerm_network_security_group" "nsg-jh" {
+resource "azurerm_network_security_group" "nsgp-jh" {
   name                = join("-", [var.stage.long, "jh"])
   location            = var.location.long
   resource_group_name = azurerm_resource_group.rg-net.name

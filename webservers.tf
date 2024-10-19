@@ -28,7 +28,7 @@ resource "azurerm_network_interface" "nic-web" {
   accelerated_networking_enabled  = var.web-accnic
 
   ip_configuration {
-    name                          = "testconfiguration${count.index + 1}"
+    name                          = "pubipconf${count.index + 1}"
     subnet_id                     = azurerm_subnet.subnets["sn-pub"].id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = element(azurerm_public_ip.pip-web.*.id, count.index)
@@ -42,7 +42,7 @@ resource "azurerm_virtual_machine" "vm-web" {
   name                  = "${local.project}-web${count.index + 1}"
   location              = azurerm_resource_group.proj-rg.location
   resource_group_name   = azurerm_resource_group.proj-rg.name
-  network_interface_ids = ["${element(azurerm_network_interface.nic-web.*.id, count.index)}"]
+  network_interface_ids = [element(azurerm_network_interface.nic-web.*.id, count.index)]
   vm_size               = var.web-size
   availability_set_id   = azurerm_availability_set.web-ays.id
   proximity_placement_group_id = azurerm_proximity_placement_group.webdb.id
@@ -57,9 +57,9 @@ resource "azurerm_virtual_machine" "vm-web" {
 
   storage_os_disk {
     name              = "osdisk-${local.project}-web${count.index + 1}"
-    caching           = var.web-os-disk-caching
+    caching           = var.web-os-disk.caching
     create_option     = "FromImage"
-    managed_disk_type = var.web-os-disk-type
+    managed_disk_type = var.web-os-disk.type
   }
 
   os_profile {
@@ -71,7 +71,7 @@ resource "azurerm_virtual_machine" "vm-web" {
     disable_password_authentication = true
     ssh_keys {
       path     = "/home/${var.azure_admin_username}/.ssh/authorized_keys"
-      key_data = file("${var.sshkey_path}")
+      key_data = file(var.sshkey_path)
     }
   }
 }
@@ -81,7 +81,7 @@ resource "azurerm_managed_disk" "web-data" {
   name = "${local.project}-web${ceil((count.index+1) / var.web-data-disk-count)}-data${(count.index+1) - var.web-data-disk-count*floor((count.index+1)/var.web-data-disk-count)}"
   location              = azurerm_resource_group.proj-rg.location
   resource_group_name   = azurerm_resource_group.proj-rg.name
-  storage_account_type  = var.web-data-disk-type
+  storage_account_type  = var.web-data-disk.type
   disk_size_gb          = var.web-data-disk-size
   create_option         = "Empty"
 }
@@ -91,5 +91,5 @@ resource "azurerm_virtual_machine_data_disk_attachment" "web-data-datt" {
   managed_disk_id       = azurerm_managed_disk.web-data[count.index].id
   virtual_machine_id    = azurerm_virtual_machine.vm-web[ceil((count.index+1)/var.web-data-disk-count)-1].id
   lun                   = (count.index+1) - var.web-data-disk-count*floor((count.index+1)/var.web-data-disk-count)
-  caching               = var.web-data-disk-caching
+  caching               = var.web-data-disk.caching
 }

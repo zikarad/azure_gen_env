@@ -7,9 +7,11 @@ output "project" {
   }
 }
 
-output "hosts-jh-public" {
-  value = zipmap(azurerm_virtual_machine.vm-jh.*.name,
-  azurerm_public_ip.pip-jh.*.ip_address)
+output "hosts-jh" {
+  value = {
+    private = zipmap(azurerm_virtual_machine.vm-jh.*.name, azurerm_network_interface.pnic-jh.*.private_ip_address)
+    public  = zipmap(azurerm_virtual_machine.vm-jh.*.name, azurerm_public_ip.pip-jh.*.ip_address)
+  }
 }
 
 output "access-jh-public" {
@@ -19,15 +21,16 @@ output "access-jh-public" {
   }
 }
 
-output "hosts-jh-private" {
-  value = zipmap(azurerm_virtual_machine.vm-jh.*.name,
-  azurerm_network_interface.nic-jh.*.private_ip_address)
-}
-
 output "hosts-web" {
   value = zipmap(azurerm_virtual_machine.vm-web.*.name,
   azurerm_public_ip.pip-web.*.ip_address)
 }
+
+output "hosts-be" {
+  value = zipmap(azurerm_virtual_machine.vm-be.*.name,
+  azurerm_network_interface.inic-be.*.private_ip_address)
+}
+
 
 output "key-vault" {
   value = {
