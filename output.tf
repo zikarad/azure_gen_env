@@ -7,9 +7,11 @@ output "project" {
   }
 }
 
-output "hosts-jh-public" {
-  value = zipmap(azurerm_virtual_machine.vm-jh.*.name,
-  azurerm_public_ip.pip-jh.*.ip_address)
+output "hosts-jh" {
+  value = {
+    private = zipmap(azurerm_virtual_machine.vm-jh.*.name, azurerm_network_interface.pnic-jh.*.private_ip_address)
+    public  = zipmap(azurerm_virtual_machine.vm-jh.*.name, azurerm_public_ip.pip-jh.*.ip_address)
+  }
 }
 
 output "access-jh-public" {
@@ -17,11 +19,6 @@ output "access-jh-public" {
     user = var.azure_admin_username
     key  = var.sshkey_path
   }
-}
-
-output "hosts-jh-private" {
-  value = zipmap(azurerm_virtual_machine.vm-jh.*.name,
-  azurerm_network_interface.pnic-jh.*.private_ip_address)
 }
 
 output "hosts-web" {

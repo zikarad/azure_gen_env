@@ -62,7 +62,7 @@ resource "azurerm_network_interface" "inic-jh" {
   name                = "${local.project}-inic-jh${count.index + 1}"
   location            = var.location.long
   resource_group_name = azurerm_resource_group.proj-rg.name
-  enable_accelerated_networking = var.jh-accnic
+  accelerated_networking_enabled = var.jh-accnic
 
   ip_configuration {
     name                          = "privipconfig${count.index + 1}"
