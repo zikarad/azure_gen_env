@@ -1,3 +1,5 @@
+data "azurerm_client_config" "current" {}
+
 /* STORAGE ACCOUNT */
 
 resource "azurerm_storage_account" "proj-sa" {
@@ -11,26 +13,28 @@ resource "azurerm_storage_account" "proj-sa" {
   tags = local.tags
 }
 
-
-
-data "azurerm_client_config" "current" {}
+/* KEY VAULT */
 
 resource "azurerm_key_vault" "t-kv" {
   name                        = join("-", [var.stage.short, "kv", local.project])
   location                    = azurerm_resource_group.proj-rg.location
   resource_group_name         = azurerm_resource_group.proj-rg.name
-  enabled_for_disk_encryption = true
+
+  enabled_for_deployment          = var.enabled_for_deployment
+  enabled_for_disk_encryption     = var.enabled_for_disk_encryption
+  enabled_for_template_deployment = var.enabled_for_template_deployment
+
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 7
   purge_protection_enabled    = false
 
-  sku_name = "standard"
+  sku_name = var.sku_name
 
   network_acls {
     bypass         = "AzureServices"
     default_action = "Deny"
     ip_rules = [var.my_ip]
-    virtual_network_subnet_ids = [azurerm_subnet.subnets["sn-pub"].id, azurerm_subnet.subnets["sn-priv"].id] 
+    virtual_network_subnet_ids = [azurerm_subnet.subnets["sn-priv"].id] 
   }
 
   tags = local.tags

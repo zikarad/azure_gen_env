@@ -108,3 +108,30 @@ variable "sa-enable-bool" {
 }
 
 variable "my_ip" {}
+
+#
+# Kye vault variables
+#
+variable "sku_name" {
+  type        = string
+  description = "Select Standard or Premium SKU"
+  default     = "standard"
+}
+
+variable "enabled_for_deployment" {
+  type        = string
+  description = "Allow Azure Virtual Machines to retrieve certificates stored as secrets from the Azure Key Vault"
+  default     = false
+}
+
+variable "enabled_for_disk_encryption" {
+  type        = string
+  description = "Allow Azure Disk Encryption to retrieve secrets from the Azure Key Vault and unwrap keys"
+  default     = true
+}
+
+variable "enabled_for_template_deployment" {
+  type        = string
+  description = "Allow Azure Resource Manager to retrieve secrets from the Azure Key Vault"
+  default     = false
+}
