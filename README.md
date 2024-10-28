@@ -5,6 +5,7 @@ Deploy playground environment via Terraform into Azure cloud
 - vnet + 2 subnets
 - variable "location"
 - variable "jh-count"
+  - variable jh-platform (arm64/x86_64)
 - variable "web-count"
 - small "B" VMs accessible from specific IP
     - jumphosts /availability set/

@@ -91,7 +91,18 @@ variable "azure_admin_username" {
   default = "azuser"
 }
 
+variable "jh-platform" {
+  type = string
+  default = "arm64"
+
+  validation {
+    condition     = contains(["x86_64", "arm64"], var.jh-platform)
+    error_message = "Platform must be either x86_64 or arm64"
+  }
+}
+
 variable "jh-size" {
+  type = string
   default = "Standard_B2pls_v2"
 }
 
@@ -110,7 +121,7 @@ variable "sa-enable-bool" {
 variable "my_ip" {}
 
 #
-# Kye vault variables
+# Key vault variables
 #
 variable "sku_name" {
   type        = string
